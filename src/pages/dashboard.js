@@ -22,7 +22,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchMusic = async () => {
       try {
-        const response = await fetch("${apiUrl}/api/music1");
+        const response = await fetch(`${apiUrl}/api/music1`);
         const data = await response.json();
 
         const allMusic = [...data.data];
