@@ -16,7 +16,6 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [popularSongs, setPopularSongs] = useState([]);
   const [trendingSongs, setTrendingSongs] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -41,7 +40,6 @@ const Dashboard = () => {
 
 
         setMusicData(allMusic);
-        setPopularSongs(popularSongs); 
         setTrendingSongs(trendingSongs); 
       } catch (error) {
         console.error("Error fetching music:", error);
@@ -190,6 +188,8 @@ const Dashboard = () => {
       setShowSearchResults(false);
     }
   };
+
+  const url = `${apiUrl}/music/search`;
 
   return (
     <div className="dashboard-container">

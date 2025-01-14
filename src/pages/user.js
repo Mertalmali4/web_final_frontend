@@ -486,7 +486,7 @@ const User = () => {
 
   useEffect(() => {
     fetchFavorites();
-  }, []);
+  }, [fetchFavorites]);
 
   const handlePopularPrev = () => setCurrentIndexPopular(prev => Math.max(0, prev - 1));
   const handlePopularNext = () => {
