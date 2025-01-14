@@ -159,35 +159,35 @@ const Dashboard = () => {
   const visibleSongs2 = musicData.slice(currentIndex2, currentIndex2 + visibleSongCount);
 
   const handleNext1 = () => {
-    if (currentIndex1 + visibleSongCount < musicData.length) {
-      setCurrentIndex1(currentIndex1 + 1);
-    } else {
-      setCurrentIndex1(0);
-    }
+    const maxIndex = musicData.length - 1;
+    setCurrentIndex1(prevIndex => {
+      const nextIndex = prevIndex + 1;
+      return nextIndex > maxIndex ? 0 : nextIndex;
+    });
   };
 
   const handlePrev1 = () => {
-    if (currentIndex1 > 0) {
-      setCurrentIndex1(currentIndex1 - 1);
-    } else {
-      setCurrentIndex1(Math.max(0, musicData.length - visibleSongCount));
-    }
+    const maxIndex = musicData.length - 1;
+    setCurrentIndex1(prevIndex => {
+      const nextIndex = prevIndex - 1;
+      return nextIndex < 0 ? maxIndex : nextIndex;
+    });
   };
 
   const handleNext2 = () => {
-    if (currentIndex2 + visibleSongCount < musicData.length) {
-      setCurrentIndex2(currentIndex2 + 1);
-    } else {
-      setCurrentIndex2(0);
-    }
+    const maxIndex = musicData.length - 1;
+    setCurrentIndex2(prevIndex => {
+      const nextIndex = prevIndex + 1;
+      return nextIndex > maxIndex ? 0 : nextIndex;
+    });
   };
 
   const handlePrev2 = () => {
-    if (currentIndex2 > 0) {
-      setCurrentIndex2(currentIndex2 - 1);
-    } else {
-      setCurrentIndex2(Math.max(0, musicData.length - visibleSongCount));
-    }
+    const maxIndex = musicData.length - 1;
+    setCurrentIndex2(prevIndex => {
+      const nextIndex = prevIndex - 1;
+      return nextIndex < 0 ? maxIndex : nextIndex;
+    });
   };
 
   const getFilteredMusic = (type) => {
@@ -290,7 +290,7 @@ const Dashboard = () => {
                 <div className="slider" style={{
                   transform: `translateX(-${currentIndex1 * 100}%)`
                 }}>
-                  {visibleSongs1.map((song) => (
+                  {musicData.map((song, index) => (
                     <div key={song.id} className="card">
                       <div className="thumbnail-container" onClick={() => handleMusicPlay(song)}>
                         <img
@@ -323,7 +323,7 @@ const Dashboard = () => {
                 <div className="slider" style={{
                   transform: `translateX(-${currentIndex2 * 100}%)`
                 }}>
-                  {visibleSongs2.map((song) => (
+                  {musicData.map((song, index) => (
                     <div key={song.id} className="card">
                       <div className="thumbnail-container" onClick={() => handleMusicPlay(song)}>
                         <img
