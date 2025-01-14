@@ -561,6 +561,35 @@ const User = () => {
     }
   }, []);
 
+  const getVisibleSongsCount = () => {
+    if (window.innerWidth <= 768) {
+      return 1; // Mobil için tek şarkı
+    }
+    return 2; // Desktop için iki şarkı
+  };
+
+  const [visibleSongCount, setVisibleSongCount] = useState(getVisibleSongsCount());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setVisibleSongCount(getVisibleSongsCount());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Slider kontrolleri için güncellenmiş fonksiyonlar
+  const handleNext = (currentIndex, setCurrentIndex, items) => {
+    const maxIndex = items.length - visibleSongCount;
+    setCurrentIndex(prev => (prev >= maxIndex ? 0 : prev + 1));
+  };
+
+  const handlePrev = (currentIndex, setCurrentIndex, items) => {
+    const maxIndex = items.length - visibleSongCount;
+    setCurrentIndex(prev => (prev <= 0 ? maxIndex : prev - 1));
+  };
+
   return (
     <div className="user-container">
       <div className="user-main-content">

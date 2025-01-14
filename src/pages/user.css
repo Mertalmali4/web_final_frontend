@@ -138,22 +138,116 @@
 
 /* Responsive tasarım */
 @media (max-width: 1200px) {
-  .user-main-sections {
+  .user-main-sections,
+  .user-secondary-sections {
     grid-template-columns: 1fr;
+    max-height: none;
   }
-  
-  .user-slider {
-    grid-template-columns: repeat(2, 1fr);
+
+  .user-section {
+    margin-bottom: 20px;
+  }
+
+  .user-sections {
+    gap: 30px;
   }
 }
 
 @media (max-width: 768px) {
-  .user-slider {
-    grid-template-columns: 1fr;
-  }
-  
-  .user-section {
+  .user-container {
     padding: 10px;
+  }
+
+  .user-header {
+    flex-direction: column;
+    padding: 15px 0;
+  }
+
+  .user-search-container {
+    width: 100%;
+    flex: none;
+  }
+
+  .user-profile {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .user-slider {
+    grid-template-columns: 1fr; /* Tek kolon */
+  }
+
+  .user-card {
+    max-width: none;
+  }
+
+  .user-section-header {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 10px;
+  }
+
+  .user-section-header h2 {
+    font-size: 18px;
+  }
+
+  .user-card-info h4 {
+    font-size: 16px;
+  }
+
+  .user-card-info p {
+    font-size: 14px;
+  }
+
+  /* Modal düzenlemeleri */
+  .user-modal {
+    width: 95%;
+    margin: 10px;
+  }
+
+  .user-selected-song {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .user-selected-song img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-card-overlay {
+    gap: 5px;
+  }
+
+  .user-play-btn,
+  .user-playlist-btn,
+  .user-favorite-btn {
+    width: 35px;
+    height: 35px;
+  }
+
+  .user-section-header h2 {
+    font-size: 16px;
+  }
+
+  .user-slider-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .user-card-info {
+    padding: 8px;
+  }
+
+  .playlist-song-info img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-modal-header h3 {
+    font-size: 16px;
   }
 }
 
