@@ -137,58 +137,24 @@ const Dashboard = () => {
     navigate('/Login');
   };
 
-  const getVisibleSongsCount = () => {
-    if (window.innerWidth <= 768) {
-      return 1;
-    }
-    return 2;
-  };
-
-  const [visibleSongCount, setVisibleSongCount] = useState(getVisibleSongsCount());
-
-  useEffect(() => {
-    const handleResize = () => {
-      setVisibleSongCount(getVisibleSongsCount());
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const visibleSongs1 = musicData.slice(currentIndex1, currentIndex1 + visibleSongCount);
-  const visibleSongs2 = musicData.slice(currentIndex2, currentIndex2 + visibleSongCount);
-
   const handleNext1 = () => {
-    const maxIndex = musicData.length - 1;
-    setCurrentIndex1(prevIndex => {
-      const nextIndex = prevIndex + 1;
-      return nextIndex > maxIndex ? 0 : nextIndex;
-    });
+    setCurrentIndex1((prevIndex) => (prevIndex + 2) % musicData.length);
   };
 
   const handlePrev1 = () => {
-    const maxIndex = musicData.length - 1;
-    setCurrentIndex1(prevIndex => {
-      const nextIndex = prevIndex - 1;
-      return nextIndex < 0 ? maxIndex : nextIndex;
-    });
+    setCurrentIndex1((prevIndex) => (prevIndex - 2 + musicData.length) % musicData.length);
   };
 
   const handleNext2 = () => {
-    const maxIndex = musicData.length - 1;
-    setCurrentIndex2(prevIndex => {
-      const nextIndex = prevIndex + 1;
-      return nextIndex > maxIndex ? 0 : nextIndex;
-    });
+    setCurrentIndex2((prevIndex) => (prevIndex + 2) % musicData.length);
   };
 
   const handlePrev2 = () => {
-    const maxIndex = musicData.length - 1;
-    setCurrentIndex2(prevIndex => {
-      const nextIndex = prevIndex - 1;
-      return nextIndex < 0 ? maxIndex : nextIndex;
-    });
+    setCurrentIndex2((prevIndex) => (prevIndex - 2 + musicData.length) % musicData.length);
   };
+
+  const visibleSongs1 = musicData.slice(currentIndex1, currentIndex1 + 2);
+  const visibleSongs2 = musicData.slice(currentIndex2, currentIndex2 + 2);
 
   const getFilteredMusic = (type) => {
     return musicData.filter(song => song.Type === type);
@@ -287,10 +253,8 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="slider-container">
-                <div className="slider" style={{
-                  transform: `translateX(-${currentIndex1 * 100}%)`
-                }}>
-                  {musicData.map((song, index) => (
+                <div className="slider">
+                  {visibleSongs1.map((song) => (
                     <div key={song.id} className="card">
                       <div className="thumbnail-container" onClick={() => handleMusicPlay(song)}>
                         <img
@@ -320,10 +284,8 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="slider-container">
-                <div className="slider" style={{
-                  transform: `translateX(-${currentIndex2 * 100}%)`
-                }}>
-                  {musicData.map((song, index) => (
+                <div className="slider">
+                  {visibleSongs2.map((song) => (
                     <div key={song.id} className="card">
                       <div className="thumbnail-container" onClick={() => handleMusicPlay(song)}>
                         <img
