@@ -277,7 +277,7 @@ const Dashboard = () => {
 
             <div className="section">
               <div className="section-header">
-                <h2>Trending Now</h2>
+                <h2>All Songs</h2>
                 <div className="slider-controls">
                   <button className="slider-btn prev" onClick={handlePrev2}>&lt;</button>
                   <button className="slider-btn next" onClick={handleNext2}>&gt;</button>

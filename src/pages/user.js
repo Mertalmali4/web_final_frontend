@@ -680,7 +680,7 @@ const User = () => {
 
             <div className="user-section">
               <div className="user-section-header">
-                <h2>Trending Songs</h2>
+                <h2>All Songs</h2>
                 <div className="user-slider-controls">
                   <button className="user-slider-btn prev" onClick={handleTrendingPrev}>&lt;</button>
                   <button className="user-slider-btn next" onClick={handleTrendingNext}>&gt;</button>
