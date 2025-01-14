@@ -1,0 +1,133 @@
+/* Login.css */
+
+.login-container {
+  height: 100vh;
+  background: linear-gradient(to bottom, #1db954, #121212);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-content {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-header h1 {
+  color: #1db954;
+  font-size: 32px;
+  margin: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #1db954;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.login-submit-btn {
+  background: #1db954;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+.login-submit-btn:hover {
+  background: #1ed760;
+  transform: scale(1.02);
+}
+
+.signup-link {
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.signup-link a {
+  color: #1db954;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .login-content {
+    padding: 30px 20px;
+  }
+
+  .login-header h1 {
+    font-size: 28px;
+  }
+}
+
+.back-link {
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1db954;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  color: #1ed760;
+  transform: translateX(-5px);
+}
+
+.back-link i {
+  font-size: 13px;
+}
+
