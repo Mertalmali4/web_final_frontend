@@ -16,9 +16,8 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [trendingSongs, setTrendingSongs] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
-
+  const [trendingSongs, setTrendingSongs] = useState([]);
 
   useEffect(() => {
     const fetchMusic = async () => {
@@ -48,6 +47,20 @@ const Dashboard = () => {
 
     fetchMusic();
   }, []);
+
+  useEffect(() => {
+    const fetchTrendingSongs = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/music/trending`);
+        const data = await response.json();
+        setTrendingSongs(data);
+      } catch (error) {
+        console.error('Error fetching trending songs:', error);
+      }
+    };
+
+    fetchTrendingSongs();
+  }, [apiUrl]);
 
   const filteredMusic = useMemo(() => {
     if (selectedGenre === 'All') return musicData;

@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const User = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [musicData, setMusicData] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const audioRef = useRef(new Audio());
   const [progress, setProgress] = useState(0);
   const [currentSong, setCurrentSong] = useState(null);
   const navigate = useNavigate();
@@ -34,6 +32,7 @@ const User = () => {
   const [selectedPlaylistForPlaying, setSelectedPlaylistForPlaying] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [playlistToDelete, setPlaylistToDelete] = useState(null);
+  const audioRef = useRef(null);
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -291,7 +290,9 @@ const User = () => {
   }, [trendingSongs, currentIndexTrending]);
 
   const handleMusicPlay = useCallback(async (song, playlist = null, playlistIndex = 0) => {
-    const audioElement = audioRef.current;
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
 
     // Eğer playlist belirtildiyse, playlist bilgilerini kaydet
     if (playlist) {
@@ -304,24 +305,24 @@ const User = () => {
     }
 
     if (currentSong && currentSong.id === song.id) {
-      if (audioElement.paused) {
+      if (audioRef.current.paused) {
         try {
-          await audioElement.play();
+          await audioRef.current.play();
           setIsMusicPlaying(true);
         } catch (error) {
           console.error("Playback failed:", error);
         }
       } else {
-        audioElement.pause();
+        audioRef.current.pause();
         setIsMusicPlaying(false);
       }
       return;
     }
 
     try {
-      audioElement.pause();
+      audioRef.current.pause();
       setIsMusicPlaying(false);
-      audioElement.src = "${apiUrl}" + song.SourceUrl;
+      audioRef.current.src = "${apiUrl}" + song.SourceUrl;
       
       try {
         const response = await fetch(`${apiUrl}/api/music1/${song.documentId}`, {
@@ -348,8 +349,8 @@ const User = () => {
         console.error("Error updating play count:", error);
       }
       
-      await audioElement.load();
-      await audioElement.play();
+      await audioRef.current.load();
+      await audioRef.current.play();
       
       setIsMusicPlaying(true);
       setCurrentSong(song);
@@ -357,7 +358,7 @@ const User = () => {
     } catch (error) {
       console.error("Error playing new song:", error);
     }
-  }, [currentSong]);
+  }, [currentSong, apiUrl]);
 
   useEffect(() => {
     const audioElement = audioRef.current;
@@ -460,7 +461,7 @@ const User = () => {
     navigate('/');
   };
 
-  const fetchFavorites = async () => {
+  const fetchFavorites = useCallback(async () => {
     try {
       const userId = localStorage.getItem('userId');
       const response = await fetch(
@@ -482,7 +483,7 @@ const User = () => {
     } catch (error) {
       console.error('Error fetching favorites:', error);
     }
-  };
+  }, [apiUrl]);
 
   useEffect(() => {
     fetchFavorites();
@@ -538,7 +539,7 @@ const User = () => {
       }
     };
     fetchPlaylists();
-  }, []);
+  }, [apiUrl]);
 
   const playNextSong = useCallback(() => {
     if (currentPlaylist) {
@@ -600,6 +601,16 @@ const User = () => {
       console.error('Error deleting playlist:', error);
     }
   };
+
+  const handlePlayPause = useCallback(() => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, []);
 
   return (
     <div className="user-container">
