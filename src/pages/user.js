@@ -32,7 +32,7 @@ const User = () => {
   const [selectedPlaylistForPlaying, setSelectedPlaylistForPlaying] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [playlistToDelete, setPlaylistToDelete] = useState(null);
-  const audioRef = useRef(null);
+  const audioRef = useRef(new Audio());
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -69,7 +69,7 @@ const User = () => {
 
       if (existingFavorite) {
         setFavorites(prev => prev.filter(fav => fav.id !== existingFavorite.id));
-        const response = await fetch(`${apiUrl}/api/favorites/${existingFavorite.documentId}`, {
+        const response = await fetch(`${apiUrl}/favorites/${existingFavorite.documentId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -88,7 +88,7 @@ const User = () => {
           isProcessing: true
         };
         setFavorites(prev => [...prev, tempFavorite]);
-        const response = await fetch('${apiUrl}/api/favorites', {
+        const response = await fetch(`${apiUrl}/favorites`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ const User = () => {
   const createNewPlaylist = async () => {
     if (newPlaylistName.trim() && selectedSongForPlaylist) {
       try {
-        const response = await fetch('${apiUrl}/api/play-lists', {
+        const response = await fetch(`${apiUrl}/play-lists`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ const User = () => {
 
         const userId = localStorage.getItem('userId');
         const getResponse = await fetch(
-          `${apiUrl}/api/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`,
+          `${apiUrl}/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`,
           {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -171,7 +171,7 @@ const User = () => {
 
   const deleteEmptyPlaylist = async (playlistId) => {
     try {
-      const response = await fetch(`${apiUrl}/api/play-lists/${playlistId}`, {
+      const response = await fetch(`${apiUrl}/play-lists/${playlistId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -186,7 +186,7 @@ const User = () => {
       
       const userId = localStorage.getItem('userId');
       const getResponse = await fetch(
-        `${apiUrl}/api/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`,
+        `${apiUrl}/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`,
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -227,7 +227,7 @@ const User = () => {
         return;
       }
       
-      const updateResponse = await fetch(`${apiUrl}/api/play-lists/${playlist.documentId}`, {
+      const updateResponse = await fetch(`${apiUrl}/play-lists/${playlist.documentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -248,7 +248,7 @@ const User = () => {
 
       const userId = localStorage.getItem('userId');
       const getResponse = await fetch(
-        `${apiUrl}/api/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`,
+        `${apiUrl}/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`,
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -291,21 +291,31 @@ const User = () => {
 
   const handlePlayMusic = async (song) => {
     try {
-      if (!audioRef.current) {
-        console.error("Audio element not found");
+      const audioElement = audioRef.current;
+
+      if (currentSong && currentSong.id === song.id) {
+        if (audioElement.paused) {
+          await audioElement.play();
+          setIsMusicPlaying(true);
+        } else {
+          audioElement.pause();
+          setIsMusicPlaying(false);
+        }
         return;
       }
 
-      audioRef.current.pause();
+      audioElement.pause();
       setIsMusicPlaying(false);
       
-      const audioUrl = `${apiUrl}${song.SourceUrl}`; // veya sizin endpoint yapınız
-      audioRef.current.src = audioUrl;
+      const audioUrl = `${apiUrl}${song.SourceUrl}`;
+      console.log('Playing audio from:', audioUrl);
       
-      await audioRef.current.load();
-      await audioRef.current.play();
+      audioElement.src = audioUrl;
+      await audioElement.load();
+      await audioElement.play();
       setIsMusicPlaying(true);
       setCurrentSong(song);
+      setProgress(0);
     } catch (error) {
       console.error("Error playing new song:", error);
       setIsMusicPlaying(false);
@@ -313,16 +323,23 @@ const User = () => {
   };
 
   useEffect(() => {
-    if (!audioRef.current) return;
+    const audioElement = audioRef.current;
 
-    const handleEnded = () => {
+    const updateProgress = () => {
+      setProgress(audioElement.currentTime);
+    };
+
+    const handleSongEnd = () => {
+      setProgress(0);
       setIsMusicPlaying(false);
     };
 
-    audioRef.current.addEventListener('ended', handleEnded);
+    audioElement.addEventListener("timeupdate", updateProgress);
+    audioElement.addEventListener("ended", handleSongEnd);
 
     return () => {
-      audioRef.current?.removeEventListener('ended', handleEnded);
+      audioElement.removeEventListener("timeupdate", updateProgress);
+      audioElement.removeEventListener("ended", handleSongEnd);
     };
   }, []);
 
@@ -357,7 +374,7 @@ const User = () => {
   useEffect(() => {
     const fetchUsername = async () => {
       try {
-        const response = await fetch('${apiUrl}/api/users/me', {
+        const response = await fetch(`${apiUrl}/api/users/me`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
           }
@@ -397,7 +414,7 @@ const User = () => {
     try {
       const userId = localStorage.getItem('userId');
       const response = await fetch(
-        `${apiUrl}/api/favorites?filters[users_permissions_users][id][$eq]=${userId}&populate=*`, 
+        `${apiUrl}/favorites?filters[users_permissions_users][id][$eq]=${userId}&populate=*`, 
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -454,7 +471,7 @@ const User = () => {
       try {
         const userId = localStorage.getItem('userId');
         const response = await fetch(
-          `${apiUrl}/api/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`, 
+          `${apiUrl}/play-lists?filters[users_permissions_user][id][$eq]=${userId}&populate[music][populate]=*`, 
           {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -513,7 +530,7 @@ const User = () => {
      
   const handleDeletePlaylist = async (playlistId) => {
     try {
-      const response = await fetch(`${apiUrl}/api/play-lists/${playlistId}`, {
+      const response = await fetch(`${apiUrl}/play-lists/${playlistId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
