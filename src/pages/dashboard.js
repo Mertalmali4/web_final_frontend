@@ -159,23 +159,35 @@ const Dashboard = () => {
   const visibleSongs2 = musicData.slice(currentIndex2, currentIndex2 + visibleSongCount);
 
   const handleNext1 = () => {
-    setCurrentIndex1((prevIndex) => (prevIndex + visibleSongCount) % musicData.length);
+    if (currentIndex1 + visibleSongCount < musicData.length) {
+      setCurrentIndex1(currentIndex1 + 1);
+    } else {
+      setCurrentIndex1(0);
+    }
   };
 
   const handlePrev1 = () => {
-    setCurrentIndex1((prevIndex) => 
-      (prevIndex - visibleSongCount + musicData.length) % musicData.length
-    );
+    if (currentIndex1 > 0) {
+      setCurrentIndex1(currentIndex1 - 1);
+    } else {
+      setCurrentIndex1(Math.max(0, musicData.length - visibleSongCount));
+    }
   };
 
   const handleNext2 = () => {
-    setCurrentIndex2((prevIndex) => (prevIndex + visibleSongCount) % musicData.length);
+    if (currentIndex2 + visibleSongCount < musicData.length) {
+      setCurrentIndex2(currentIndex2 + 1);
+    } else {
+      setCurrentIndex2(0);
+    }
   };
 
   const handlePrev2 = () => {
-    setCurrentIndex2((prevIndex) => 
-      (prevIndex - visibleSongCount + musicData.length) % musicData.length
-    );
+    if (currentIndex2 > 0) {
+      setCurrentIndex2(currentIndex2 - 1);
+    } else {
+      setCurrentIndex2(Math.max(0, musicData.length - visibleSongCount));
+    }
   };
 
   const getFilteredMusic = (type) => {
@@ -275,7 +287,9 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="slider-container">
-                <div className="slider">
+                <div className="slider" style={{
+                  transform: `translateX(-${currentIndex1 * 100}%)`
+                }}>
                   {visibleSongs1.map((song) => (
                     <div key={song.id} className="card">
                       <div className="thumbnail-container" onClick={() => handleMusicPlay(song)}>
@@ -306,7 +320,9 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="slider-container">
-                <div className="slider">
+                <div className="slider" style={{
+                  transform: `translateX(-${currentIndex2 * 100}%)`
+                }}>
                   {visibleSongs2.map((song) => (
                     <div key={song.id} className="card">
                       <div className="thumbnail-container" onClick={() => handleMusicPlay(song)}>
