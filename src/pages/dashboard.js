@@ -117,7 +117,7 @@ const Dashboard = () => {
       console.log('API URL:', apiUrl);
       console.log('Source URL:', song.SourceUrl);
       
-      const audioUrl = `${apiUrl}/${song.SourceUrl}`;
+      const audioUrl = `${apiUrl}${song.SourceUrl}`;
       console.log('Final audio URL:', audioUrl);
       
       audioElement.src = audioUrl;
