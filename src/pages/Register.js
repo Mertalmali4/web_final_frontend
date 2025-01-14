@@ -15,7 +15,7 @@ const Register = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch(`${apiUrl}/auth/register`, {
+      const response = await fetch(`${apiUrl}/auth/local/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
