@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [searchResults, setSearchResults] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
   const [trendingSongs, setTrendingSongs] = useState([]);
+  const socket = new WebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL);
 
   useEffect(() => {
     const fetchMusic = async () => {
