@@ -113,42 +113,23 @@ const Dashboard = () => {
       audioElement.pause();
       setIsMusicPlaying(false);
       
-      audioElement.src = "${apiUrl}" + song.SourceUrl;
+      console.log('Song object:', song);
+      console.log('API URL:', apiUrl);
+      console.log('Source URL:', song.SourceUrl);
       
-      try {
-
-        const response = await fetch(`${apiUrl}/api/music1/${song.documentId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            data: {
-              play_count: (parseInt(song.play_count || 0) + 1)
-            }
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("API Error Details:", errorData);
-          throw new Error(`Failed to update play count: ${errorData.error?.message || 'Unknown error'}`);
-        }
-
-        const updatedData = await response.json();
-        console.log("Update successful:", updatedData);
-      } catch (error) {
-        console.error("Error updating play count:", error);
-      }
+      const audioUrl = `${apiUrl}/api/music/stream/${song.id}`;
+      console.log('Final audio URL:', audioUrl);
+      
+      audioElement.src = audioUrl;
       
       await audioElement.load();
       await audioElement.play();
-      
       setIsMusicPlaying(true);
       setCurrentSong(song);
       setProgress(0);
     } catch (error) {
       console.error("Error playing new song:", error);
+      setIsMusicPlaying(false);
     }
   };
 
