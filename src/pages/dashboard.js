@@ -117,7 +117,7 @@ const Dashboard = () => {
       console.log('API URL:', apiUrl);
       console.log('Source URL:', song.SourceUrl);
       
-      const audioUrl = `${apiUrl}/api/music/stream/${song.id}`;
+      const audioUrl = `${apiUrl}/api/${song.SourceYoutube}`;
       console.log('Final audio URL:', audioUrl);
       
       audioElement.src = audioUrl;
