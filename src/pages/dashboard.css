@@ -30,7 +30,8 @@ body {
 
 .dashboard-sections {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  padding-bottom: 80px;
 }
 
 .dashboard-sections::-webkit-scrollbar {
@@ -458,6 +459,7 @@ body {
 
   .card {
     max-width: 100%;
+    margin-bottom: 16px;
   }
 
   .thumbnail-container {
@@ -489,6 +491,15 @@ body {
 
   .progress-container {
     flex: 1 1 100%;
+  }
+
+  .dashboard-sections {
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 100px;
+  }
+
+  .slider-controls {
+    display: none;
   }
 }
 

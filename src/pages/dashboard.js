@@ -137,24 +137,46 @@ const Dashboard = () => {
     navigate('/Login');
   };
 
+  const getVisibleSongsCount = () => {
+    if (window.innerWidth <= 768) {
+      return 1;
+    }
+    return 2;
+  };
+
+  const [visibleSongCount, setVisibleSongCount] = useState(getVisibleSongsCount());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setVisibleSongCount(getVisibleSongsCount());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const visibleSongs1 = musicData.slice(currentIndex1, currentIndex1 + visibleSongCount);
+  const visibleSongs2 = musicData.slice(currentIndex2, currentIndex2 + visibleSongCount);
+
   const handleNext1 = () => {
-    setCurrentIndex1((prevIndex) => (prevIndex + 2) % musicData.length);
+    setCurrentIndex1((prevIndex) => (prevIndex + visibleSongCount) % musicData.length);
   };
 
   const handlePrev1 = () => {
-    setCurrentIndex1((prevIndex) => (prevIndex - 2 + musicData.length) % musicData.length);
+    setCurrentIndex1((prevIndex) => 
+      (prevIndex - visibleSongCount + musicData.length) % musicData.length
+    );
   };
 
   const handleNext2 = () => {
-    setCurrentIndex2((prevIndex) => (prevIndex + 2) % musicData.length);
+    setCurrentIndex2((prevIndex) => (prevIndex + visibleSongCount) % musicData.length);
   };
 
   const handlePrev2 = () => {
-    setCurrentIndex2((prevIndex) => (prevIndex - 2 + musicData.length) % musicData.length);
+    setCurrentIndex2((prevIndex) => 
+      (prevIndex - visibleSongCount + musicData.length) % musicData.length
+    );
   };
-
-  const visibleSongs1 = musicData.slice(currentIndex1, currentIndex1 + 2);
-  const visibleSongs2 = musicData.slice(currentIndex2, currentIndex2 + 2);
 
   const getFilteredMusic = (type) => {
     return musicData.filter(song => song.Type === type);
