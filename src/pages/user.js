@@ -69,7 +69,7 @@ const User = () => {
 
       if (existingFavorite) {
         setFavorites(prev => prev.filter(fav => fav.id !== existingFavorite.id));
-        const response = await fetch(`${apiUrl}/favorites/${existingFavorite.documentId}`, {
+        const response = await fetch(`${apiUrl}/api/favorites/${existingFavorite.documentId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -88,7 +88,7 @@ const User = () => {
           isProcessing: true
         };
         setFavorites(prev => [...prev, tempFavorite]);
-        const response = await fetch(`${apiUrl}/favorites`, {
+        const response = await fetch(`${apiUrl}/api/favorites`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -414,7 +414,7 @@ const User = () => {
     try {
       const userId = localStorage.getItem('userId');
       const response = await fetch(
-        `${apiUrl}/favorites?filters[users_permissions_users][id][$eq]=${userId}&populate=*`, 
+        `${apiUrl}/api/favorites?filters[users_permissions_users][id][$eq]=${userId}&populate=*`, 
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
