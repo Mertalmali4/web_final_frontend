@@ -419,6 +419,109 @@ body {
 @media (max-width: 1024px) {
   .sections-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .genre-icons {
+    gap: 30px;
+  }
+
+  .genre-icon i {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 0;
+  }
+
+  .search-container {
+    width: 100%;
+  }
+
+  .login-btn {
+    width: 100%;
+  }
+
+  .slider {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+
+  .thumbnail-container {
+    height: 180px;
+  }
+
+  .genre-icons {
+    gap: 20px;
+  }
+
+  .music-bar {
+    padding: 8px 16px;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 80px;
+  }
+
+  .music-info {
+    flex: 1 1 100%;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .audio-controls {
+    flex: 1 1 100%;
+    order: -1;
+    margin-bottom: 8px;
+  }
+
+  .progress-container {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .genre-icons {
+    gap: 15px;
+  }
+
+  .genre-icon i {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .genre-icon span {
+    font-size: 14px;
+  }
+
+  .genre-modal {
+    width: 95%;
+  }
+
+  .genre-song-card img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .song-info h3 {
+    font-size: 14px;
+  }
+
+  .song-info p {
+    font-size: 12px;
   }
 }
 

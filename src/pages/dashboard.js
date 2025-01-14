@@ -186,6 +186,15 @@ const Dashboard = () => {
 
   const url = `${apiUrl}/music/search`;
 
+  useEffect(() => {
+    const mainContent = document.querySelector('.main-content');
+    if (isMusicPlaying || progress > 0) {
+      mainContent.classList.add('with-music-bar');
+    } else {
+      mainContent.classList.remove('with-music-bar');
+    }
+  }, [isMusicPlaying, progress]);
+
   return (
     <div className="dashboard-container">
       <div className="main-content">
