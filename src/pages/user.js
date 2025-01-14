@@ -361,38 +361,18 @@ const User = () => {
   }, [currentSong, apiUrl]);
 
   useEffect(() => {
-    const audioElement = audioRef.current;
+    if (!audioRef.current) return;
 
-    const updateProgress = () => {
-      setProgress(audioElement.currentTime);
-    };
-
-    const handleSongEnd = () => {
-      setProgress(0);
+    const handleEnded = () => {
       setIsMusicPlaying(false);
-
-      if (currentPlaylist) {
-        const playlistSongs = currentPlaylist.music || [];
-        const nextIndex = currentPlaylistIndex + 1;
-
-        if (nextIndex < playlistSongs.length) {
-          const nextSong = playlistSongs[nextIndex];
-          handleMusicPlay(nextSong, currentPlaylist, nextIndex);
-        } else {
-          setCurrentPlaylist(null);
-          setCurrentPlaylistIndex(0);
-        }
-      }
     };
 
-    audioElement.addEventListener("timeupdate", updateProgress);
-    audioElement.addEventListener("ended", handleSongEnd);
+    audioRef.current.addEventListener('ended', handleEnded);
 
     return () => {
-      audioElement.removeEventListener("timeupdate", updateProgress);
-      audioElement.removeEventListener("ended", handleSongEnd);
+      audioRef.current?.removeEventListener('ended', handleEnded);
     };
-  }, [currentPlaylist, currentPlaylistIndex, handleMusicPlay]);
+  }, []);
 
   const visibleFavorites = useMemo(() => {
     return favorites.slice(currentIndexFavorites, currentIndexFavorites + 2);
