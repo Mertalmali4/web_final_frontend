@@ -289,76 +289,28 @@ const User = () => {
     return trendingSongs.slice(currentIndexTrending, currentIndexTrending + 2);
   }, [trendingSongs, currentIndexTrending]);
 
-  const handleMusicPlay = useCallback(async (song, playlist = null, playlistIndex = 0) => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-
-    // Eğer playlist belirtildiyse, playlist bilgilerini kaydet
-    if (playlist) {
-      setCurrentPlaylist(playlist);
-      setCurrentPlaylistIndex(playlistIndex);
-    } else {
-      // Playlist yoksa bu değerleri sıfırla
-      setCurrentPlaylist(null);
-      setCurrentPlaylistIndex(0);
-    }
-
-    if (currentSong && currentSong.id === song.id) {
-      if (audioRef.current.paused) {
-        try {
-          await audioRef.current.play();
-          setIsMusicPlaying(true);
-        } catch (error) {
-          console.error("Playback failed:", error);
-        }
-      } else {
-        audioRef.current.pause();
-        setIsMusicPlaying(false);
-      }
-      return;
-    }
-
+  const handlePlayMusic = async (song) => {
     try {
+      if (!audioRef.current) {
+        console.error("Audio element not found");
+        return;
+      }
+
       audioRef.current.pause();
       setIsMusicPlaying(false);
-      audioRef.current.src = "${apiUrl}" + song.SourceUrl;
       
-      try {
-        const response = await fetch(`${apiUrl}/api/music1/${song.documentId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            data: {
-              play_count: (parseInt(song.play_count || 0) + 1)
-            }
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("API Error Details:", errorData);
-          throw new Error(`Failed to update play count: ${errorData.error?.message || 'Unknown error'}`);
-        }
-
-        const updatedData = await response.json();
-
-      } catch (error) {
-        console.error("Error updating play count:", error);
-      }
+      const audioUrl = `${apiUrl}${song.SourceUrl}`; // veya sizin endpoint yapınız
+      audioRef.current.src = audioUrl;
       
       await audioRef.current.load();
       await audioRef.current.play();
-      
       setIsMusicPlaying(true);
       setCurrentSong(song);
-      setProgress(0);
     } catch (error) {
       console.error("Error playing new song:", error);
+      setIsMusicPlaying(false);
     }
-  }, [currentSong, apiUrl]);
+  };
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -527,15 +479,15 @@ const User = () => {
       const nextIndex = currentPlaylistIndex + 1;
       
       if (nextIndex < playlistSongs.length) {
-        handleMusicPlay(playlistSongs[nextIndex], currentPlaylist, nextIndex);
+        handlePlayMusic(playlistSongs[nextIndex], currentPlaylist, nextIndex);
       }
     } else {
       const currentSongIndex = musicData.findIndex(song => song.id === currentSong?.id);
       if (currentSongIndex !== -1 && currentSongIndex + 1 < musicData.length) {
-        handleMusicPlay(musicData[currentSongIndex + 1]);
+        handlePlayMusic(musicData[currentSongIndex + 1]);
       }
     }
-  }, [currentPlaylist, currentPlaylistIndex, currentSong, musicData, handleMusicPlay]);
+  }, [currentPlaylist, currentPlaylistIndex, currentSong, musicData, handlePlayMusic]);
 
   const playPreviousSong = useCallback(() => {
     if (currentPlaylist) {
@@ -543,15 +495,15 @@ const User = () => {
       const prevIndex = currentPlaylistIndex - 1;
       
       if (prevIndex >= 0) {
-        handleMusicPlay(playlistSongs[prevIndex], currentPlaylist, prevIndex);
+        handlePlayMusic(playlistSongs[prevIndex], currentPlaylist, prevIndex);
       }
     } else {
       const currentSongIndex = musicData.findIndex(song => song.id === currentSong?.id);
       if (currentSongIndex > 0) {
-        handleMusicPlay(musicData[currentSongIndex - 1]);
+        handlePlayMusic(musicData[currentSongIndex - 1]);
       }
     }
-  }, [currentPlaylist, currentPlaylistIndex, currentSong, musicData, handleMusicPlay]);
+  }, [currentPlaylist, currentPlaylistIndex, currentSong, musicData, handlePlayMusic]);
 
   const handlePlaylistClick = (playlist) => {
     setSelectedPlaylistForPlaying(playlist);
@@ -611,7 +563,7 @@ const User = () => {
                     key={song.id} 
                     className="user-search-result-item"
                     onClick={() => {
-                      handleMusicPlay(song);
+                      handlePlayMusic(song);
                       setShowSearchResults(false);
                       setSearchTerm('');
                     }}
@@ -662,7 +614,7 @@ const User = () => {
                           <button onClick={() => addToFavorites(song)} className="user-favorite-btn">
                             <i className="fas fa-heart"></i>
                           </button>
-                          <button onClick={() => handleMusicPlay(song)} className="user-play-btn">
+                          <button onClick={() => handlePlayMusic(song)} className="user-play-btn">
                             <i className="fas fa-play"></i>
                           </button>
                           <button onClick={() => addToPlaylist(song)} className="user-playlist-btn">
@@ -701,7 +653,7 @@ const User = () => {
                           <button onClick={() => addToFavorites(song)} className="user-favorite-btn">
                             <i className="fas fa-heart"></i>
                           </button>
-                          <button onClick={() => handleMusicPlay(song)} className="user-play-btn">
+                          <button onClick={() => handlePlayMusic(song)} className="user-play-btn">
                             <i className="fas fa-play"></i>
                           </button>
                           <button onClick={() => addToPlaylist(song)} className="user-playlist-btn">
@@ -746,7 +698,7 @@ const User = () => {
                             alt={`${favorite.music.Title} thumbnail`}
                           />
                           <div className="user-card-overlay">
-                            <button onClick={() => handleMusicPlay(favorite.music)} className="user-play-btn">
+                            <button onClick={() => handlePlayMusic(favorite.music)} className="user-play-btn">
                               <i className="fas fa-play"></i>
                             </button>
                             <button onClick={() => addToPlaylist(favorite.music)} className="user-playlist-btn">
@@ -799,7 +751,7 @@ const User = () => {
                                 onClick={(e) => {
                                   e.stopPropagation(); // Card'a tıklamayı engelle
                                   if (musicCount > 0 && firstSong) {
-                                    handleMusicPlay(firstSong, playlist, 0);
+                                    handlePlayMusic(firstSong, playlist, 0);
                                   }
                                 }} 
                                 className="user-play-btn"
@@ -992,7 +944,7 @@ const User = () => {
                       key={song.id} 
                       className="playlist-song-item"
                       onClick={() => {
-                        handleMusicPlay(song, selectedPlaylistForPlaying, index);
+                        handlePlayMusic(song, selectedPlaylistForPlaying, index);
                         setIsPlaylistSongsModalOpen(false);
                       }}
                     >
