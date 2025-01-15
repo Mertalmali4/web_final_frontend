@@ -220,9 +220,16 @@
   }
 
   .user-search-results {
-    top: calc(100% + 5px);
-    max-height: 200px;
+    top: calc(100% + 5px) !important;
+    max-height: 400px !important;
   }
+  
+  
+  .user-search-bar {/**/
+      padding: 8px 15px;
+      width: 90% !important;
+  }
+
 
   .user-sections {
     margin-top: 10px;
@@ -272,8 +279,15 @@
     margin-bottom: 0;
   }
 
-  .user-search-bar {
-    padding: 8px 15px;
+  .user-search-bar {/**/
+    width: 100%;
+    padding: 5px 45px 5px 5px;
+    border: none;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    outline: none;
   }
 }
 
@@ -336,14 +350,15 @@
 }
 
 /* Search sonuçları için stiller */
-.user-search-results {
+.user-search-results {/**/
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   right: 0;
   background: #282828;
   border-radius: 4px;
-  max-height: 300px;
+  max-height: 600px;
+  width: 400px;
   overflow-y: auto;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

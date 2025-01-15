@@ -517,6 +517,11 @@ body {
     margin-bottom: 20px;
     padding: 0 10px;
   }
+
+  .search-bar {
+    padding: 8px 15px;
+    width: 90% !important;
+}
 }
 
 @media (max-width: 480px) {
